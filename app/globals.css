@@ -1,0 +1,57 @@
+@import "tailwindcss";
+
+/*
+ * Founder OS design tokens — dark "operator console" aesthetic.
+ * Single accent: muted sage/emerald. Everything else stays graphite.
+ */
+:root {
+  --background: #0a0b0c;
+  --surface: #121416;
+  --surface-raised: #16191b;
+  --border: #1f2427;
+  --border-strong: #2b3236;
+  --foreground: #e8eae6;
+  --muted: #8a9490;
+  --faint: #5c6663;
+  --accent: #6ea482;
+  --accent-strong: #8fc4a3;
+  --accent-dim: rgba(110, 164, 130, 0.12);
+  --negative: #c4756b;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-raised: var(--surface-raised);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-faint: var(--faint);
+  --color-accent: var(--accent);
+  --color-accent-strong: var(--accent-strong);
+  --color-accent-dim: var(--accent-dim);
+  --color-negative: var(--negative);
+  --font-sans: var(--font-inter);
+  --font-mono: var(--font-jetbrains-mono);
+  --font-serif: var(--font-instrument-serif);
+}
+
+html {
+  background: var(--background);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-inter), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  /* Respect iPad safe areas when running as fullscreen PWA */
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+::selection {
+  background: var(--accent-dim);
+  color: var(--accent-strong);
+}
