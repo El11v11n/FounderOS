@@ -33,7 +33,7 @@ function SparkTooltip({
  */
 export function Sparkline({ data }: { data: Point[] }) {
   return (
-    <div className="h-12 w-full" aria-hidden={false}>
+    <div className="h-16 w-full" aria-hidden={false}>
       <ResponsiveContainer width="100%" height="100%">
         <AreaChart data={data} margin={{ top: 4, right: 2, bottom: 2, left: 2 }}>
           <defs>

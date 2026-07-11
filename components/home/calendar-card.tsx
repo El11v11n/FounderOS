@@ -37,7 +37,7 @@ export function CalendarCard() {
       {!demo ? (
         <EmptyState note="Events arrive with the database in Phase 2." />
       ) : (
-        <div className="space-y-3">
+        <div className="space-y-4">
           <DayList day="today" />
           <DayList day="tomorrow" />
         </div>

@@ -87,6 +87,37 @@ no schema change between them).
 - **Phase 4 — Voice + Finance**: transcription (key TBD), expense capture, Revolut CSV import (mapping + dedupe), finance charts.
 - **Phase 5 — Intelligence**: CRM follow-up flags, weekly review, morning briefing cron, polish (empty/loading/error states).
 
+## Current status (updated 2026-07-11 — read this first in a new session)
+
+- Phase 0 ✅ (PR #1 merged) · Phase 1 ✅ (PR #2 merged) + polish round (PR #3
+  merged, PR #4 = "airier layout + centered" pending merge at time of writing).
+- **Next up: Phase 2** (schema, auth, CRUD, capture pipeline). Open questions
+  sent to user, answers pending:
+  1. Is Supabase project created + both `NEXT_PUBLIC_SUPABASE_*` vars set in Vercel?
+     (Footer still showed "DB NOT CONFIGURED" at last check.)
+  2. Migrations via (a) SQL scripts user pastes into Supabase SQL Editor
+     (recommended) or (b) Supabase keys as env vars in the Claude environment.
+  3. Confirm login email = laurenz.geissler@proton.me (password set by user).
+  4. Confirm habit list: Gym, Deep Work, Reading, Sales Practice.
+
+### Workflow with the user (established, keep it)
+
+- Work on branch `claude/founder-os-phase-0-inm4tv`; after its PR merges,
+  reset it from `origin/main` (`git checkout -B <branch> origin/main`) and
+  force-with-lease push. User merges PRs himself on GitHub; Vercel auto-deploys
+  `main`. Verify layout with Playwright screenshots (1194×834 and 834×1194)
+  before every push.
+- Commit messages + PR bodies: German. Give the user a 3-line German summary
+  plus screenshots (SendUserFile) after each phase.
+
+### Design feedback learned (do not regress)
+
+- User found the compressed layout "gequetscht" → generous spacing wins over
+  fitting one screen. Some vertical scrolling in landscape is ACCEPTED.
+- Content font sizes one tick larger (15px for card content) — keep.
+- Card arrangement on HOME is approved and fixed: capture(2)+operator+finance /
+  today(2, tall)+habits+calendar / goals(2) on lg.
+
 ## User context (build around this)
 
 - Café München (from Sept 2026, venture #1): countdown, milestones, later daily KPIs

@@ -29,7 +29,7 @@ export function HabitsCard() {
               {score}/{habits.length}
             </span>
           </p>
-          <ul className="space-y-2">
+          <ul className="space-y-2.5">
             {habits.map((habit) => (
               <li key={habit.id} className="flex items-center gap-3">
                 <button
