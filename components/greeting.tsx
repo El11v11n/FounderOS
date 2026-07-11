@@ -17,6 +17,8 @@ export function Greeting() {
   const [now, setNow] = useState<Date | null>(null);
 
   useEffect(() => {
+    // Clock sync with the device — intentional hydration-safe first tick.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setNow(new Date());
     const timer = setInterval(() => setNow(new Date()), 30_000);
     return () => clearInterval(timer);

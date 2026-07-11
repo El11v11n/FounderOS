@@ -25,6 +25,8 @@ export function DemoModeProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const stored = window.localStorage.getItem(STORAGE_KEY);
+    // localStorage is only readable client-side — intentional one-time sync.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (stored !== null) setDemoState(stored === "on");
   }, []);
 

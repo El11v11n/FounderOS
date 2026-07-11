@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { DemoToggle } from "@/components/demo-toggle";
+import { useAuth } from "@/lib/auth";
 
 const MODULES = [
   { href: "/", label: "HOME" },
@@ -17,6 +18,7 @@ const MODULES = [
 
 export function TopNav() {
   const pathname = usePathname();
+  const { session, signOut } = useAuth();
 
   return (
     <header className="sticky top-0 z-20 border-b border-border bg-background/90 backdrop-blur">
@@ -49,6 +51,16 @@ export function TopNav() {
           })}
         </nav>
         <DemoToggle />
+        {session && (
+          <button
+            type="button"
+            onClick={signOut}
+            className="shrink-0 rounded px-2 py-1.5 font-mono text-[10px] tracking-wider text-faint transition-colors hover:text-negative-strong"
+            title="Sign out"
+          >
+            EXIT
+          </button>
+        )}
       </div>
     </header>
   );
