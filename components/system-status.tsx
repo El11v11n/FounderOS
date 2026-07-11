@@ -20,7 +20,7 @@ export function SystemStatus() {
 
   return (
     <footer className="border-t border-border">
-      <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-x-6 gap-y-1 px-4 py-1.5 font-mono text-[11px] tracking-wider text-faint sm:px-6">
+      <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-x-6 gap-y-1 px-4 py-2.5 font-mono text-[11px] tracking-wider text-faint sm:px-6 lg:px-8">
         <span className="text-muted">SYS // STATUS</span>
         <span className="flex items-center gap-1.5">
           <StatusDot ok />

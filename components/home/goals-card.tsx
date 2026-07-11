@@ -13,10 +13,10 @@ export function GoalsCard() {
       {!demo ? (
         <EmptyState note="Goals go live in Phase 2." />
       ) : (
-        <ul className="space-y-3">
+        <ul className="space-y-3.5">
           {demoGoals.map((goal) => (
             <li key={goal.id}>
-              <div className="mb-1 flex items-center gap-2">
+              <div className="mb-1.5 flex items-center gap-2">
                 <span className="min-w-0 flex-1 truncate text-[15px] text-foreground">
                   {goal.title}
                 </span>

@@ -58,7 +58,7 @@ export default function RootLayout({
         <ServiceWorkerRegister />
         <DemoModeProvider>
           <TopNav />
-          <main className="flex-1 w-full max-w-7xl mx-auto px-4 py-2 sm:px-6">
+          <main className="flex-1 w-full max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
             {children}
           </main>
           <SystemStatus />
