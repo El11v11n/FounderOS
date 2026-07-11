@@ -8,3 +8,8 @@ export function isSupabaseConfigured(): boolean {
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
   );
 }
+
+/** Server-only: capture classification available? (Phase 2+) */
+export function isAnthropicConfigured(): boolean {
+  return Boolean(process.env.ANTHROPIC_API_KEY);
+}

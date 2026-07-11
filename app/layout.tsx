@@ -5,6 +5,8 @@ import { TopNav } from "@/components/top-nav";
 import { SystemStatus } from "@/components/system-status";
 import { ServiceWorkerRegister } from "@/components/service-worker-register";
 import { DemoModeProvider } from "@/lib/demo-mode";
+import { AuthProvider } from "@/lib/auth";
+import { AuthGate } from "@/components/auth-gate";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -57,11 +59,13 @@ export default function RootLayout({
       <body className="min-h-dvh flex flex-col">
         <ServiceWorkerRegister />
         <DemoModeProvider>
-          <TopNav />
-          <main className="flex-1 w-full max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
-            {children}
-          </main>
-          <SystemStatus />
+          <AuthProvider>
+            <TopNav />
+            <main className="flex-1 w-full max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
+              <AuthGate>{children}</AuthGate>
+            </main>
+            <SystemStatus />
+          </AuthProvider>
         </DemoModeProvider>
       </body>
     </html>

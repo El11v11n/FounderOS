@@ -1,4 +1,4 @@
-import { isSupabaseConfigured } from "@/lib/env";
+import { isAnthropicConfigured, isSupabaseConfigured } from "@/lib/env";
 
 function StatusDot({ ok }: { ok: boolean }) {
   return (
@@ -16,6 +16,7 @@ function StatusDot({ ok }: { ok: boolean }) {
  */
 export function SystemStatus() {
   const dbConfigured = isSupabaseConfigured();
+  const aiConfigured = isAnthropicConfigured();
   const env = process.env.VERCEL_ENV ?? "local";
 
   return (
@@ -24,11 +25,15 @@ export function SystemStatus() {
         <span className="text-muted">SYS // STATUS</span>
         <span className="flex items-center gap-1.5">
           <StatusDot ok />
-          APP&nbsp;v0.2&nbsp;·&nbsp;PHASE&nbsp;1
+          APP&nbsp;v0.3&nbsp;·&nbsp;PHASE&nbsp;2
         </span>
         <span className="flex items-center gap-1.5">
           <StatusDot ok={dbConfigured} />
           DB&nbsp;{dbConfigured ? "CONFIGURED" : "NOT CONFIGURED"}
+        </span>
+        <span className="flex items-center gap-1.5">
+          <StatusDot ok={aiConfigured} />
+          AI&nbsp;{aiConfigured ? "READY" : "OFF"}
         </span>
         <span className="flex items-center gap-1.5">
           <StatusDot ok />

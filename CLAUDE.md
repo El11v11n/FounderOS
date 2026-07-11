@@ -63,10 +63,14 @@ PWA on iPad Pro, cloud data in Supabase, Telegram bot as universal inbox.
 
 ## Database schema
 
-None yet — Phase 2 introduces the full schema + migrations
-(tasks, ideas, events, contacts, habits, goals, journal, transactions, captures).
-Transactions must be provider-agnostic (Revolut CSV v1, GoCardless bank API v2,
-no schema change between them).
+Phase 2 schema lives in `supabase/migrations/` (user pastes into Supabase SQL Editor):
+- `001_phase2_schema.sql` — tasks, ideas, events, contacts, habits + habit_checks,
+  goals, journal_entries, transactions (provider-agnostic: `source`, `external_id`,
+  `raw` jsonb, partial unique dedupe index — Revolut CSV v1 / GoCardless v2 need no
+  schema change), captures (pipeline audit trail + unsorted inbox). All tables:
+  `user_id default auth.uid()`, RLS owner-only, updated_at triggers.
+- `002_seed_habits.sql` — seeds Exercise, Deep Work, Reading, Bible Studies,
+  Studying (requires the auth user to exist first; raises a clear error if not).
 
 ## Telegram pipeline (Phase 3, the heart)
 
@@ -82,27 +86,32 @@ no schema change between them).
 - **Phase 0 — Setup** ✅ scaffold, dark shell, nav, PWA installable, Supabase client stub, deployed.
 - **Phase 1 — Core dashboard** ✅ HOME with all 7 cards (capture, operator, finance
   pulse + sparkline, today, habits, calendar, goals), demo-mode toggle, iPad responsive.
-- **Phase 2 — Real data**: schema + migrations, auth (single user), CRUD for all modules, in-app Capture → classification pipeline.
+- **Phase 2 — Real data** ✅ (code): schema + migrations, auth (single user), CRUD for all modules, in-app Capture → classification pipeline (claude-haiku-4-5, strict JSON via output_config).
 - **Phase 3 — Telegram**: webhook 24/7, text capture classified + filed + confirmed + undo.
 - **Phase 4 — Voice + Finance**: transcription (key TBD), expense capture, Revolut CSV import (mapping + dedupe), finance charts.
 - **Phase 5 — Intelligence**: CRM follow-up flags, weekly review, morning briefing cron, polish (empty/loading/error states).
 
 ## Current status (updated 2026-07-11 — read this first in a new session)
 
-- Phase 0 ✅ (PR #1 merged) · Phase 1 ✅ (PR #2 merged) + polish round (PR #3
-  merged, PR #4 = "airier layout + centered" pending merge at time of writing).
-- **Next up: Phase 2** (schema, auth, CRUD, capture pipeline). Open questions
-  sent to user, answers pending:
-  1. Is Supabase project created + both `NEXT_PUBLIC_SUPABASE_*` vars set in Vercel?
-     (Footer still showed "DB NOT CONFIGURED" at last check.)
-  2. Migrations via (a) SQL scripts user pastes into Supabase SQL Editor
-     (recommended) or (b) Supabase keys as env vars in the Claude environment.
-  3. Confirm login email = laurenz.geissler@proton.me (password set by user).
-  4. Confirm habit list: Gym, Deep Work, Reading, Sales Practice.
+- Phase 0 ✅ (PR #1) · Phase 1 ✅ (PR #2) + polish (PR #3, PR #4) — all merged.
+- **Phase 2 code complete** (this branch). User answered the setup questions:
+  Supabase configured in Vercel ✅, migrations via SQL scripts (option a),
+  login = laurenz.geissler@proton.me, habits = Exercise / Deep Work / Reading /
+  Bible Studies / Studying.
+- **User to-dos before Phase 2 is live** (told in German in the PR):
+  1. Supabase Dashboard → Authentication → Users → Add user
+     (laurenz.geissler@proton.me, password self-chosen).
+  2. SQL Editor → run `supabase/migrations/001_phase2_schema.sql`,
+     then `002_seed_habits.sql`.
+  3. Vercel → set `ANTHROPIC_API_KEY` (else captures land unsorted in BRAIN;
+     footer shows AI OFF).
+- **Next up: Phase 3** (Telegram webhook). The capture route
+  (`app/api/capture/route.ts`) already contains the classify+file pipeline
+  Telegram will reuse.
 
 ### Workflow with the user (established, keep it)
 
-- Work on branch `claude/founder-os-phase-0-inm4tv`; after its PR merges,
+- Work on the branch assigned per session; after its PR merges,
   reset it from `origin/main` (`git checkout -B <branch> origin/main`) and
   force-with-lease push. User merges PRs himself on GitHub; Vercel auto-deploys
   `main`. Verify layout with Playwright screenshots (1194×834 and 834×1194)
