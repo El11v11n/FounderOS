@@ -21,27 +21,38 @@ PWA on iPad Pro, cloud data in Supabase, Telegram bot as universal inbox.
 - PWA: `app/manifest.ts` + `public/sw.js` (no caching by design) + `public/apple-touch-icon.png`
 - Anthropic API (small model) for capture classification (Phase 2+)
 - Telegram Bot API via webhook → Vercel serverless route (Phase 3)
-- Charts: Recharts (add in Phase 1, not yet installed)
+- Charts: Recharts (installed; see `components/sparkline.tsx` for the house style:
+  2px accent line, faint gradient fill, zero baseline, hover tooltip, no axes on sparklines)
 
 ## Architecture
 
 - `app/` — App Router pages. Modules: `/` (HOME), `/brain`, `/crm`, `/ventures`,
   `/finance`, `/calendar`, `/goals`, `/journal`.
 - `components/` — shared UI (`card.tsx` = base card with "01 // LABEL" header,
-  `top-nav.tsx`, `system-status.tsx`, `greeting.tsx`).
+  `top-nav.tsx`, `system-status.tsx`, `greeting.tsx`, `ui.tsx` = Delta/Meter/Tag/EmptyState,
+  `sparkline.tsx`, `demo-toggle.tsx`).
+- `components/home/` — one file per HOME card (operator, capture, tasks, habits,
+  finance, calendar, goals). Grid breakpoints: `md` = 2 cols, `lg` = 4 cols
+  (iPad landscape is 1194px — never use `xl` for iPad layouts!).
 - `lib/env.ts` — feature/config detection (app must build & run without any env vars).
 - `lib/supabase.ts` — browser client factory, returns `null` when unconfigured.
+- `lib/demo-mode.tsx` — DemoModeProvider + useDemoMode (localStorage-backed).
+- `lib/demo-data.ts` — all demo-mode sample data, only rendered when demo is ON.
 - `scripts/generate-icons.mjs` — regenerates all PWA icons from inline SVG (`node scripts/generate-icons.mjs`).
 
 ## Design tokens (see `app/globals.css`)
 
 - Background `#0a0b0c`, surface `#121416`, border `#1f2427`, text `#e8eae6`,
   muted `#8a9490`, faint `#5c6663`.
-- Single accent: sage `#6ea482` (strong `#8fc4a3`, dim bg `--accent-dim`), negative `#c4756b`.
+- Single accent: sage `#6ea482` (strong `#8fc4a3`, dim bg `--accent-dim`),
+  negative `#c4756b` (text variant `--negative-strong` `#d9958c`).
+- All status colors pass WCAG 4.5:1 on surface/background; deltas always ship
+  arrow + sign so color is never the only channel.
 - Fonts (next/font): Inter (sans/body), JetBrains Mono (numbers, module labels,
   console text), Instrument Serif italic (personal touches, greetings).
 - Module labels: small mono caps, numbered — `01 // OPERATOR`, `02 // SESSION`, …
-- DEMO ON/OFF toggle (Phase 1): demo shows sample data, real shows user data, never mixed.
+- DEMO ON/OFF toggle (in top nav since Phase 1): demo shows sample data, real mode
+  shows user data or per-card empty states — never mixed.
 
 ## Env vars (names only — values live in Vercel / .env.local)
 
@@ -69,7 +80,8 @@ no schema change between them).
 ## Phase roadmap
 
 - **Phase 0 — Setup** ✅ scaffold, dark shell, nav, PWA installable, Supabase client stub, deployed.
-- **Phase 1 — Core dashboard**: design system, HOME with all cards, demo-mode data, iPad responsive.
+- **Phase 1 — Core dashboard** ✅ HOME with all 7 cards (capture, operator, finance
+  pulse + sparkline, today, habits, calendar, goals), demo-mode toggle, iPad responsive.
 - **Phase 2 — Real data**: schema + migrations, auth (single user), CRUD for all modules, in-app Capture → classification pipeline.
 - **Phase 3 — Telegram**: webhook 24/7, text capture classified + filed + confirmed + undo.
 - **Phase 4 — Voice + Finance**: transcription (key TBD), expense capture, Revolut CSV import (mapping + dedupe), finance charts.

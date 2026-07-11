@@ -17,6 +17,7 @@
   --accent-strong: #8fc4a3;
   --accent-dim: rgba(110, 164, 130, 0.12);
   --negative: #c4756b;
+  --negative-strong: #d9958c;
 }
 
 @theme inline {
@@ -32,6 +33,7 @@
   --color-accent-strong: var(--accent-strong);
   --color-accent-dim: var(--accent-dim);
   --color-negative: var(--negative);
+  --color-negative-strong: var(--negative-strong);
   --font-sans: var(--font-inter);
   --font-mono: var(--font-jetbrains-mono);
   --font-serif: var(--font-instrument-serif);

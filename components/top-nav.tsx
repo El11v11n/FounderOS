@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { DemoToggle } from "@/components/demo-toggle";
 
 const MODULES = [
   { href: "/", label: "HOME" },
@@ -47,6 +48,7 @@ export function TopNav() {
             );
           })}
         </nav>
+        <DemoToggle />
       </div>
     </header>
   );

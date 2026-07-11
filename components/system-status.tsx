@@ -24,7 +24,7 @@ export function SystemStatus() {
         <span className="text-muted">SYS // STATUS</span>
         <span className="flex items-center gap-1.5">
           <StatusDot ok />
-          APP&nbsp;v0.1&nbsp;·&nbsp;PHASE&nbsp;0
+          APP&nbsp;v0.2&nbsp;·&nbsp;PHASE&nbsp;1
         </span>
         <span className="flex items-center gap-1.5">
           <StatusDot ok={dbConfigured} />
