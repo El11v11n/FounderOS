@@ -20,7 +20,7 @@ export function FinanceCard() {
       ) : (
         <>
           <div className="flex items-baseline justify-between gap-2">
-            <p className="font-mono text-2xl text-foreground">
+            <p className="font-mono text-3xl text-foreground">
               {net >= 0 ? "+" : "−"}€{eur(Math.abs(net))}
             </p>
             <Delta value={demoFinance.deltaVsLastMonth} />
@@ -28,10 +28,10 @@ export function FinanceCard() {
           <p className="mt-1 font-mono text-[11px] tracking-wider text-faint">
             NET THIS MONTH · VS LAST MONTH
           </p>
-          <div className="mt-3">
+          <div className="mt-2">
             <Sparkline data={demoFinanceTrend} />
           </div>
-          <div className="mt-3 flex justify-between font-mono text-xs tracking-wider">
+          <div className="mt-2 flex justify-between font-mono text-xs tracking-wider">
             <span className="text-muted">
               IN&nbsp;<span className="text-accent-strong">€{eur(demoFinance.monthIncome)}</span>
             </span>
