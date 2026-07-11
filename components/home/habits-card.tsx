@@ -29,14 +29,14 @@ export function HabitsCard() {
               {score}/{habits.length}
             </span>
           </p>
-          <ul className="space-y-2.5">
+          <ul className="space-y-2">
             {habits.map((habit) => (
               <li key={habit.id} className="flex items-center gap-3">
                 <button
                   type="button"
                   onClick={() => toggle(habit.id)}
                   aria-pressed={habit.done}
-                  className={`flex-1 rounded border px-3 py-1.5 text-left text-sm transition-colors ${
+                  className={`flex-1 rounded border px-3 py-1.5 text-left text-[15px] transition-colors ${
                     habit.done
                       ? "border-accent/40 bg-accent-dim text-accent-strong"
                       : "border-border text-muted hover:border-border-strong"

@@ -9,8 +9,8 @@ export function OperatorCard() {
 
   return (
     <Card label="01 // OPERATOR">
-      <p className="text-lg font-medium">Laurenz</p>
-      <p className="mt-1 font-serif text-xl italic text-muted">
+      <p className="text-xl font-medium">Laurenz</p>
+      <p className="mt-1 font-serif text-2xl italic text-muted">
         Building the foundation.
       </p>
       <div className="mt-4 flex items-center gap-2 font-mono text-xs tracking-wider">

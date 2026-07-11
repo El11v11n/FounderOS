@@ -35,7 +35,7 @@ export function CaptureCard() {
               : "Capture pipeline goes live in Phase 2"
           }
           disabled={!demo}
-          className="min-w-0 flex-1 rounded border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-faint focus:border-accent focus:outline-none disabled:opacity-50"
+          className="min-w-0 flex-1 rounded border border-border bg-background px-3 py-2 text-[15px] text-foreground placeholder:text-faint focus:border-accent focus:outline-none disabled:opacity-50"
         />
         <button
           type="button"
@@ -51,7 +51,7 @@ export function CaptureCard() {
           {captured.map((item, i) => (
             <li
               key={`${item}-${i}`}
-              className="flex items-center gap-2 text-sm text-muted"
+              className="flex items-center gap-2 text-[15px] text-muted"
             >
               <span className="font-mono text-[10px] tracking-wider text-accent">
                 → BRAIN

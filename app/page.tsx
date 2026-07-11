@@ -9,9 +9,9 @@ import { GoalsCard } from "@/components/home/goals-card";
 
 export default function Home() {
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       <Greeting />
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-4">
         <CaptureCard />
         <OperatorCard />
         <FinanceCard />

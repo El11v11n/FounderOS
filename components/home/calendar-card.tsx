@@ -14,8 +14,8 @@ function DayList({ day }: { day: "today" | "tomorrow" }) {
       </p>
       <ul className="space-y-1.5">
         {events.map((event) => (
-          <li key={event.id} className="flex items-center gap-2.5 text-sm">
-            <span className="shrink-0 font-mono text-xs text-accent-strong">
+          <li key={event.id} className="flex items-center gap-2.5 text-[15px]">
+            <span className="shrink-0 font-mono text-[13px] text-accent-strong">
               {event.time}
             </span>
             <span className="min-w-0 flex-1 truncate text-foreground">
@@ -37,7 +37,7 @@ export function CalendarCard() {
       {!demo ? (
         <EmptyState note="Events arrive with the database in Phase 2." />
       ) : (
-        <div className="space-y-4">
+        <div className="space-y-3">
           <DayList day="today" />
           <DayList day="tomorrow" />
         </div>

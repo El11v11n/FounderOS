@@ -24,7 +24,7 @@ export function Greeting() {
 
   return (
     <div className="flex flex-wrap items-baseline justify-between gap-2">
-      <h1 className="font-serif text-3xl italic text-foreground sm:text-4xl">
+      <h1 className="font-serif text-3xl italic text-foreground">
         {now ? greetingFor(now.getHours()) : "Welcome, Boss."}
       </h1>
       <p className="font-mono text-sm tracking-widest text-muted">
