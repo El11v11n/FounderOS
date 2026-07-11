@@ -4,6 +4,7 @@ import "./globals.css";
 import { TopNav } from "@/components/top-nav";
 import { SystemStatus } from "@/components/system-status";
 import { ServiceWorkerRegister } from "@/components/service-worker-register";
+import { DemoModeProvider } from "@/lib/demo-mode";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -55,11 +56,13 @@ export default function RootLayout({
     >
       <body className="min-h-dvh flex flex-col">
         <ServiceWorkerRegister />
-        <TopNav />
-        <main className="flex-1 w-full max-w-7xl mx-auto px-4 py-6 sm:px-6">
-          {children}
-        </main>
-        <SystemStatus />
+        <DemoModeProvider>
+          <TopNav />
+          <main className="flex-1 w-full max-w-7xl mx-auto px-4 py-6 sm:px-6">
+            {children}
+          </main>
+          <SystemStatus />
+        </DemoModeProvider>
       </body>
     </html>
   );
