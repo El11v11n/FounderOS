@@ -160,6 +160,43 @@ export async function GET(req: NextRequest) {
       : { ok: false, message: "Sign in to run the live key check." };
   }
 
+  // ?format=text — a page you can just open and read on the iPad, without
+  // hunting for anything in the UI or parsing JSON.
+  if (req.nextUrl.searchParams.get("format") === "text") {
+    const lines = [
+      "FOUNDER OS — STATUS",
+      "",
+      `RUNNING ON   ${deployment.target.toUpperCase()}` +
+        (deployment.branch ? `  (branch: ${deployment.branch})` : "") +
+        (deployment.commit ? `  (commit: ${deployment.commit})` : ""),
+      `DATABASE     ${isSupabaseConfigured() ? "CONFIGURED" : "NOT CONFIGURED"}`,
+      `AI KEY       ${key.present ? "FOUND" : "NOT FOUND"}`,
+      "",
+      "WHAT IS WRONG",
+      `  ${hint ?? "Nothing — the Anthropic key is present and looks valid."}`,
+      "",
+      "ENV VARIABLES THIS DEPLOYMENT CAN SEE",
+      ...(envVars.seen.length > 0
+        ? envVars.seen.map((n) => `  ${n}`)
+        : ["  (none)"]),
+      "",
+      "ENV VARIABLES THAT ARE MISSING",
+      ...(envVars.missing.length > 0
+        ? envVars.missing.map((n) => `  ${n}`)
+        : ["  (none)"]),
+      "",
+      "Names only — no values are ever shown here, so this page is safe to share.",
+      `Checked at ${new Date().toISOString()}`,
+      "",
+    ];
+    return new NextResponse(lines.join("\n"), {
+      headers: {
+        "Content-Type": "text/plain; charset=utf-8",
+        "Cache-Control": "no-store",
+      },
+    });
+  }
+
   return NextResponse.json(
     {
       app: { version: APP_VERSION, phase: APP_PHASE },
