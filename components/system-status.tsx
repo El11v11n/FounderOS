@@ -8,6 +8,12 @@ type Probe = { ok: boolean; message: string };
 type Status = {
   app: { version: string; phase: number };
   env: string;
+  deployment: {
+    target: string;
+    branch: string | null;
+    commit: string | null;
+  };
+  envVars: { seen: string[]; missing: string[]; unexpected: string[] };
   db: { configured: boolean };
   ai: {
     configured: boolean;
@@ -129,15 +135,29 @@ export function SystemStatus() {
           ENV&nbsp;{env.toUpperCase()}
         </span>
       </div>
-      {showDetail && detail && (
-        <div className="mx-auto max-w-7xl px-4 pb-2.5 sm:px-6 lg:px-8">
-          <p
-            className={`font-mono text-[11px] leading-relaxed tracking-wider ${
-              probe?.ok ? "text-accent" : "text-negative-strong"
-            }`}
-          >
-            {probe?.ok ? "✓" : "!"} {detail}
+      {showDetail && status && (
+        <div className="mx-auto max-w-7xl space-y-1 px-4 pb-3 font-mono text-[11px] leading-relaxed tracking-wider sm:px-6 lg:px-8">
+          {detail && (
+            <p className={probe?.ok ? "text-accent" : "text-negative-strong"}>
+              {probe?.ok ? "✓" : "!"} {detail}
+            </p>
+          )}
+          <p className="text-faint">
+            DEPLOY&nbsp;{status.deployment.target.toUpperCase()}
+            {status.deployment.branch && ` · ${status.deployment.branch}`}
+            {status.deployment.commit && ` · ${status.deployment.commit}`}
           </p>
+          <p className="text-faint">
+            VARS&nbsp;SEEN&nbsp;
+            {status.envVars.seen.length > 0
+              ? status.envVars.seen.join(" · ")
+              : "none"}
+          </p>
+          {status.envVars.missing.length > 0 && (
+            <p className="text-faint">
+              MISSING&nbsp;{status.envVars.missing.join(" · ")}
+            </p>
+          )}
         </div>
       )}
     </footer>

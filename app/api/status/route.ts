@@ -76,15 +76,75 @@ async function isSignedIn(req: NextRequest): Promise<boolean> {
   return !error && Boolean(data.user);
 }
 
+/** Env vars this app cares about. Names only — values are never returned. */
+const EXPECTED_VARS = [
+  "ANTHROPIC_API_KEY",
+  "NEXT_PUBLIC_SUPABASE_URL",
+  "NEXT_PUBLIC_SUPABASE_ANON_KEY",
+  "SUPABASE_SERVICE_ROLE_KEY",
+  "TELEGRAM_BOT_TOKEN",
+  "TELEGRAM_WEBHOOK_SECRET",
+  "TELEGRAM_ALLOWED_CHAT_ID",
+];
+
+const WATCHED_PREFIX = /^(ANTHROPIC|SUPABASE|NEXT_PUBLIC_SUPABASE|TELEGRAM)/i;
+
+/**
+ * Which of our env var *names* actually exist in the running function.
+ * This is what distinguishes "variable missing in this environment" from
+ * "variable name has a typo" — the two look identical from the outside.
+ */
+function envDiagnostics() {
+  const seen = Object.keys(process.env)
+    .filter((name) => WATCHED_PREFIX.test(name))
+    .sort();
+  return {
+    /** Names present at runtime, incl. typo'd ones we never read. */
+    seen,
+    missing: EXPECTED_VARS.filter((name) => !(name in process.env)),
+    /** Present under a name we do not read → almost certainly a typo. */
+    unexpected: seen.filter((name) => !EXPECTED_VARS.includes(name)),
+  };
+}
+
+/** Which deployment is actually answering — Production or Preview? */
+function deploymentInfo() {
+  return {
+    target: process.env.VERCEL_ENV ?? "local",
+    branch: process.env.VERCEL_GIT_COMMIT_REF ?? null,
+    commit: process.env.VERCEL_GIT_COMMIT_SHA?.slice(0, 7) ?? null,
+  };
+}
+
 export async function GET(req: NextRequest) {
   const key = anthropicKeyInfo();
+  const envVars = envDiagnostics();
+  const deployment = deploymentInfo();
 
   // Explain *why* AI is off, so the footer never just says "OFF" again.
   let hint: string | null = null;
   if (!key.present) {
-    hint =
-      "ANTHROPIC_API_KEY is not set in this deployment. Add it in Vercel → " +
-      "Settings → Environment Variables (Production + Preview), then redeploy.";
+    // Any unexpected ANTHROPIC_*/CLAUDE_* name is a likely misspelling of the
+    // key (ANTHROPIC_KEY, ANTHROPIC_API_KEEY, …). Exclude the handful of names
+    // that are legitimately something else, so this never cries wolf.
+    const typo = envVars.unexpected.find(
+      (n) =>
+        /ANTHRO|CLAUDE/i.test(n) &&
+        !/_(BASE_URL|MODEL|VERSION|TIMEOUT|LOG|LOG_LEVEL|PROXY|REGION)$/i.test(n)
+    );
+    if (typo) {
+      hint = `Found "${typo}" but not ANTHROPIC_API_KEY — the variable name is misspelled in Vercel.`;
+    } else if (deployment.target === "preview") {
+      hint =
+        `This is a PREVIEW deployment (branch ${deployment.branch ?? "?"}). ` +
+        "Vercel only injects variables whose scope includes Preview — tick the " +
+        "Preview box for ANTHROPIC_API_KEY, then redeploy this branch.";
+    } else {
+      hint =
+        "ANTHROPIC_API_KEY is not in this deployment's environment. Vercel " +
+        "snapshots variables when a deployment is created, so a variable added " +
+        "later needs a fresh deploy (Deployments → ⋯ → Redeploy).";
+    }
   } else if (key.hadWhitespace) {
     hint =
       "ANTHROPIC_API_KEY has leading/trailing whitespace — re-paste it without " +
@@ -103,7 +163,9 @@ export async function GET(req: NextRequest) {
   return NextResponse.json(
     {
       app: { version: APP_VERSION, phase: APP_PHASE },
-      env: process.env.VERCEL_ENV ?? "local",
+      env: deployment.target,
+      deployment,
+      envVars,
       db: { configured: isSupabaseConfigured() },
       ai: {
         configured: key.present,
