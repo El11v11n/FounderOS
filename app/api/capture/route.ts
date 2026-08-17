@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import Anthropic from "@anthropic-ai/sdk";
-import { isAnthropicConfigured, isSupabaseConfigured } from "@/lib/env";
+import { anthropicApiKey, isAnthropicConfigured, isSupabaseConfigured } from "@/lib/env";
 import type { Classification } from "@/lib/types";
 
 export const runtime = "nodejs";
@@ -54,7 +54,9 @@ function supabaseForToken(token: string) {
 }
 
 async function classify(text: string): Promise<Classification | null> {
-  const anthropic = new Anthropic();
+  // Pass the key explicitly: the SDK would read the raw env var including any
+  // trailing newline, which turns a working key into an opaque 401.
+  const anthropic = new Anthropic({ apiKey: anthropicApiKey() });
   const today = new Date().toLocaleDateString("en-CA", {
     timeZone: "Europe/Berlin",
   }); // YYYY-MM-DD
