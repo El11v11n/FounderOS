@@ -105,6 +105,15 @@ Phase 2 schema lives in `supabase/migrations/` (user pastes into Supabase SQL Ed
      then `002_seed_habits.sql`.
   3. Vercel → set `ANTHROPIC_API_KEY` (else captures land unsorted in BRAIN;
      footer shows AI OFF).
+- **"AI OFF" bug — solved.** Root cause: every page is statically prerendered
+  (`next build` → `○ Static`), so `SystemStatus` read `process.env.ANTHROPIC_API_KEY`
+  at *build* time and the answer was frozen into the CDN HTML. Adding the key in
+  Vercel afterwards changed nothing, and a key marked **Sensitive** in Vercel is
+  never exposed to the build at all → permanently OFF while the API route works.
+  Fix: `app/api/status/route.ts` (`force-dynamic`) is the single runtime source of
+  truth; the footer is a client component that fetches it. Clicking the AI chip
+  runs a live 1-token probe and reports the real error (401 / 403 / 429).
+  **Rule: never render an env-var-derived flag from a statically prerendered page.**
 - **Next up: Phase 3** (Telegram webhook). The capture route
   (`app/api/capture/route.ts`) already contains the classify+file pipeline
   Telegram will reuse.
